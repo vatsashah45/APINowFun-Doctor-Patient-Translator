@@ -5,6 +5,7 @@ import TextInput from "./components/TextInput";
 import LanguageSelector from "./components/LanguageSelector";
 import TranslateButton from "./components/TranslateButton";
 import TranslationResults from "./components/TranslationResults";
+import VoiceRecorder from "./components/VoiceRecorder";
 
 export default function HomePage() {
   const [text, setText] = useState("");
@@ -39,11 +40,14 @@ export default function HomePage() {
           Doctor–Patient Translator
         </h1>
         <p className="text-gray-500 mb-6 text-center">
-          Break language barriers in healthcare with real-time translation.
+          Speak or type, then translate instantly into multiple languages.
         </p>
 
         <div className="space-y-4">
-          <TextInput onChange={setText} />
+          <TextInput value={text} onChange={setText} />
+
+          <VoiceRecorder onTranscript={(t) => setText((prev) => prev + " " + t)} />
+
           <div className="flex gap-3 items-center">
             <LanguageSelector onSelect={setLang} />
             <TranslateButton onClick={handleTranslate} loading={loading} />
