@@ -19,11 +19,18 @@ export default function VoiceRecorder({ onTranscript }: { onTranscript: (text: s
     recognition.interimResults = true;
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
-      let transcript = "";
+      let finalTranscript = "";
+
       for (let i = event.resultIndex; i < event.results.length; i++) {
-        transcript += event.results[i][0].transcript + " ";
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + " ";
+        }
       }
-      onTranscript(transcript);
+
+      if (finalTranscript) {
+        onTranscript(finalTranscript.trim());
+      }
     };
 
     recognition.onend = () => setListening(false);
@@ -45,14 +52,14 @@ export default function VoiceRecorder({ onTranscript }: { onTranscript: (text: s
           className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
           onClick={startListening}
         >
-          Start Recording
+          🎤 Start Recording
         </button>
       ) : (
         <button
           className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
           onClick={stopListening}
         >
-          Stop Recording
+          ⏹ Stop Recording
         </button>
       )}
     </div>
