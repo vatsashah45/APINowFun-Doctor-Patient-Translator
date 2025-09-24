@@ -9,7 +9,7 @@ export default function LanguageSelector({ onSelect }: { onSelect: (lang: string
 
   return (
     <select
-      className="border p-2 rounded"
+      className="border p-3 rounded-lg bg-gray-50 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
       onChange={(e) => onSelect(e.target.value)}
     >
       <option value="">Select language</option>
