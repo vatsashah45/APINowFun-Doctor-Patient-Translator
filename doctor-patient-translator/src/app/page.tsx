@@ -6,6 +6,9 @@ import LanguageSelector from "./components/LanguageSelector";
 import TranslateButton from "./components/TranslateButton";
 import TranslationResults from "./components/TranslationResults";
 import VoiceRecorder from "./components/VoiceRecorder";
+import Header from "./components/Header";
+import PatientInfo from "./components/PatientInfo";
+import DownloadButton from "./components/DownloadButton";
 
 export default function HomePage() {
   const [text, setText] = useState("");
@@ -34,27 +37,38 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-      <div className="bg-white shadow-xl rounded-2xl w-full max-w-3xl p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">
-          Doctor–Patient Translator
-        </h1>
-        <p className="text-gray-500 mb-6 text-center">
-          Speak or type, then translate instantly into multiple languages.
-        </p>
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
+      <div className="bg-white shadow-xl rounded-2xl w-full max-w-5xl">
+        {/* Header */}
+        <Header />
 
-        <div className="space-y-4">
-          <TextInput value={text} onChange={setText} />
+        <div className="flex flex-col sm:flex-row gap-6 p-6">
+          {/* Left: Patient Info */}
+          <div className="sm:w-1/3">
+            <PatientInfo />
+          </div>
 
-          <VoiceRecorder onTranscript={(t) => setText((prev) => prev + " " + t)} />
+          {/* Right: Translator */}
+          <div className="sm:w-2/3 space-y-4">
+            <h1 className="text-2xl font-bold text-gray-900">
+              Doctor - Patient Translator
+            </h1>
+            <p className="text-gray-500">
+              Speak or type, then translate instantly into multiple languages.
+            </p>
 
-          <div className="flex gap-3 items-center">
-            <LanguageSelector onSelect={setLang} />
-            <TranslateButton onClick={handleTranslate} loading={loading} />
+            <TextInput value={text} onChange={setText} />
+            <VoiceRecorder onTranscript={(t) => setText((prev) => prev + " " + t)} />
+
+            <div className="flex gap-3 items-center">
+              <LanguageSelector onSelect={setLang} />
+              <TranslateButton onClick={handleTranslate} loading={loading} />
+            </div>
+
+            <TranslationResults results={results} />
+            <DownloadButton transcript={text} results={results} />
           </div>
         </div>
-
-        <TranslationResults results={results} />
       </div>
     </div>
   );
