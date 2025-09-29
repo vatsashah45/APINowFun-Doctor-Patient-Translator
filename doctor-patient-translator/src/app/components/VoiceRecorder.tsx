@@ -2,13 +2,28 @@
 
 import { useState, useRef } from "react";
 
-type SpeechRecognition = typeof window extends { webkitSpeechRecognition: infer T }
-  ? T
-  : any;
+interface ISpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start: () => void;
+  stop: () => void;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onend: (() => void) | null;
+}
 
-export default function VoiceRecorder({ onTranscript }: { onTranscript: (text: string) => void }) {
+interface SpeechRecognitionEvent extends Event {
+  resultIndex: number;
+  results: SpeechRecognitionResultList;
+}
+
+export default function VoiceRecorder({
+  onTranscript,
+}: {
+  onTranscript: (text: string) => void;
+}) {
   const [listening, setListening] = useState(false);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<ISpeechRecognition | null>(null);
 
   const startListening = () => {
     if (!("webkitSpeechRecognition" in window)) {
@@ -17,7 +32,7 @@ export default function VoiceRecorder({ onTranscript }: { onTranscript: (text: s
     }
 
     const SpeechRecognition = (window as any).webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
+    const recognition: ISpeechRecognition = new SpeechRecognition();
     recognition.lang = "en-US";
     recognition.continuous = true;
     recognition.interimResults = true;
