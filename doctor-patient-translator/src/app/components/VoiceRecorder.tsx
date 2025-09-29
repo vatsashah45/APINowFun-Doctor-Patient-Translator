@@ -2,6 +2,10 @@
 
 import { useState, useRef } from "react";
 
+type SpeechRecognition = typeof window extends { webkitSpeechRecognition: infer T }
+  ? T
+  : any;
+
 export default function VoiceRecorder({ onTranscript }: { onTranscript: (text: string) => void }) {
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
