@@ -28,7 +28,15 @@ export default function HomePage() {
       });
 
       const data = await res.json();
-      setResults(data.translations || []);
+      let translations: any[] = [];
+      if (data?.data?.reply?.translations) {
+        translations = data.data.reply.translations;
+      } else if (data.translations) {
+        translations = data.translations;
+      } else if (data.translation) {
+        translations = [{ language: lang, translation: data.translation }];
+      }
+      setResults(translations);
     } catch (error) {
       console.error("Translation failed", error);
     } finally {
@@ -39,16 +47,13 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
       <div className="bg-white shadow-xl rounded-2xl w-full max-w-5xl">
-        {/* Header */}
         <Header />
 
         <div className="flex flex-col sm:flex-row gap-6 p-6">
-          {/* Left: Patient Info */}
           <div className="sm:w-1/3">
             <PatientInfo />
           </div>
 
-          {/* Right: Translator */}
           <div className="sm:w-2/3 space-y-4">
             <h1 className="text-2xl font-bold text-gray-900">
               Doctor - Patient Translator

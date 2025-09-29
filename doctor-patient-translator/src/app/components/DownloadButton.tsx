@@ -5,15 +5,18 @@ export default function DownloadButton({
   results,
 }: {
   transcript: string;
-  results: { language: string; translation: string }[];
+  results: any[];
 }) {
   const handleDownload = () => {
     let content = "Doctor–Patient Translator Session\n\n";
     content += "Transcript:\n";
     content += transcript + "\n\n";
     content += "Translations:\n";
-    results.forEach((r) => {
-      content += `${r.language.toUpperCase()}: ${r.translation}\n`;
+
+    results?.forEach((r) => {
+      if (r?.language && r?.translation) {
+        content += `${r.language.toUpperCase()}: ${r.translation}\n`;
+      }
     });
 
     const blob = new Blob([content], { type: "text/plain" });
@@ -33,7 +36,7 @@ export default function DownloadButton({
       disabled={!transcript && results.length === 0}
       className="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg transition disabled:opacity-50"
     >
-      ⬇ Download Transcript
+      Download Transcript
     </button>
   );
 }
