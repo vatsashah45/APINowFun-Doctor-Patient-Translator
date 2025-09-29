@@ -30,12 +30,18 @@ export default function HomePage() {
       const data = await res.json();
       let translations: any[] = [];
       if (data?.data?.reply?.translations) {
-        translations = data.data.reply.translations;
-      } else if (data.translations) {
-        translations = data.translations;
-      } else if (data.translation) {
-        translations = [{ language: lang, translation: data.translation }];
-      }
+      translations = data.data.reply.translations.filter(
+        (t: { language: string }) =>
+          t.language.toLowerCase() === lang.toLowerCase()
+      );
+    } else if (data.translations) {
+      translations = data.translations.filter(
+        (t: { language: string }) =>
+          t.language.toLowerCase() === lang.toLowerCase()
+      );
+    } else if (data.translation) {
+      translations = [{ language: lang, translation: data.translation }];
+    }
       setResults(translations);
     } catch (error) {
       console.error("Translation failed", error);
